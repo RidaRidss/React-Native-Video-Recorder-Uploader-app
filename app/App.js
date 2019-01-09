@@ -7,8 +7,8 @@ import {
   ActivityIndicator
 } from "react-native";
 import { NativeEventEmitter, NativeModules } from "react-native";
+import { ZIGGEO_APP_TOKEN } from "./constants";
 import Ziggeo from "react-native-ziggeo-library";
-let ZIGGEO_APP_TOKEN = "aaaf544812fbdc01992de12ed052b164";
 let subscription;
 export default class App extends React.Component {
   constructor() {
@@ -22,12 +22,16 @@ export default class App extends React.Component {
     await this.record().done();
   }
 
-  async record() {
+  getSettings() {
     var appToken = ZIGGEO_APP_TOKEN;
     Ziggeo.setAppToken(appToken);
     Ziggeo.setCameraSwitchEnabled(true);
     Ziggeo.setCoverSelectorEnabled(true);
     Ziggeo.setCamera(Ziggeo.REAR_CAMERA);
+  }
+
+  async record() {
+    this.getSettings();
     this.setState({
       isLoading: true
     });
@@ -79,9 +83,8 @@ export default class App extends React.Component {
 
         {loadingFinished ? (
           <Button
-            style={{ marginBottom: 40 }}
+            style={{ marginTop: -80 }}
             onPress={() => {
-              alert("video token :" + videoToken);
               Ziggeo.play(videoToken);
             }}
             title="Play video"
